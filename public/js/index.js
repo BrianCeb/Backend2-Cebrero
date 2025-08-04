@@ -1,4 +1,5 @@
 const socket = io();
+const cartId = '6890a8b6bb80f210403f6ea3'
 
 function $(selector) {
     return document.querySelector(selector);
@@ -54,4 +55,20 @@ function cleanForm() {
     $('#price').value = '';
     $('#stock').value = '';
     $('#category').value = '';
+}
+
+function addToCart(pid) {
+    const cartId = '6890a8b6bb80f210403f6ea3';
+    fetch(`/api/carts/${cartId}/product/${pid}`, {
+        method: 'POST'
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('Producto agregado al carrito');
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(err => alert('Error: ' + err.message));
 }

@@ -41,6 +41,16 @@
         {{/each}}
     </div>
 </div>
-
+{{#each products}}
+    <div class="product-card">
+        <h3>{{this.title}}</h3>
+        <hr>
+        <p>Categoria: {{this.category}}</p>
+        <p>Descripción: {{this.description}}</p>
+        <p>Precio: $ {{this.price}}</p>
+        <button onclick="addToCart('{{this._id}}')">Agregar al carrito</button>
+        <button id="button-delete" onclick="deleteProduct('{{this._id}}')">Eliminar</button>
+    </div>
+{{/each}}
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/index.js"></script>
