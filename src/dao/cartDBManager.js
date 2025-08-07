@@ -67,7 +67,7 @@ class cartDBManager {
 
     async updateAllProducts(cid, products) {
 
-        //Validate if exist products
+        
         for (let key in products) {
             await this.productDBManager.getProductByID(products[key].product);
         }

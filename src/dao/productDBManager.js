@@ -15,11 +15,11 @@ class productDBManager {
         products.prevLink = products.hasPrevPage?`http://localhost:8080/products?page=${products.prevPage}` : null;
         products.nextLink = products.hasNextPage?`http://localhost:8080/products?page=${products.nextPage}` : null;
 
-        //Add limit
+        
         if (products.prevLink && paginate.limit !== 10) products.prevLink += `&limit=${paginate.limit}`
         if (products.nextLink && paginate.limit !== 10) products.nextLink += `&limit=${paginate.limit}`
 
-        //Add sort
+        
         if (products.prevLink && paginate.sort) products.prevLink += `&sort=${params.sort}`
         if (products.nextLink && paginate.sort) products.nextLink += `&sort=${params.sort}`
 

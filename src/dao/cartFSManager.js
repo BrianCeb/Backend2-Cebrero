@@ -60,7 +60,7 @@ class cartFSManager {
     }
 
     async addProductByID(cid, pid) {
-        //Check if exist product
+        
         await this.productFSManager.getProductByID(pid);
 
         const carts = await this.getAllCarts();
