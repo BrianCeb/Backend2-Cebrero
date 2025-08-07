@@ -62,4 +62,12 @@ router.get('/cart/:cid', async (req, res) => {
     )
 });
 
+router.get('/reset-password', (req, res) => {
+    const { token } = req.query;
+    if (!token) {
+        return res.status(400).send('Token no proporcionado');
+    }
+    res.render('resetPassword', { token });
+});
+
 export default router;

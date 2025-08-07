@@ -1,10 +1,60 @@
 import { Router } from 'express';
 import { productDBManager } from '../dao/productDBManager.js';
 import { cartDBManager } from '../dao/cartDBManager.js';
+import { ticketDBManager } from '../dao/ticketDBManager.js';
+import passport from 'passport';
+
 
 const router = Router();
 const ProductService = new productDBManager();
 const CartService = new cartDBManager(ProductService);
+const TicketService = new ticketDBManager();
+
+router.post('/:cid/purchase', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    try {
+        const cart = await CartService.getProductsFromCartByID(req.params.cid);
+        const user = req.user;
+
+        let total = 0;
+        const productsToKeep = [];
+        const productsToBuy = [];
+
+        for (const item of cart.products) {
+            const product = await ProductService.getProductByID(item.product._id);
+
+            if (product.stock >= item.quantity) {
+                product.stock -= item.quantity;
+                await product.save();
+
+                total += product.price * item.quantity;
+                productsToBuy.push(item);
+            } else {
+                productsToKeep.push(item);
+            }
+        }
+
+        let ticket = null;
+        if (productsToBuy.length > 0) {
+            const code = `TICKET-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+            ticket = await TicketService.createTicket({
+                code,
+                amount: total,
+                purchaser: user.email
+            });
+        }
+
+        await CartService.updateAllProducts(req.params.cid, productsToKeep);
+
+        res.send({
+            status: 'success',
+            ticket,
+            notProcessed: productsToKeep
+        });
+
+    } catch (err) {
+        res.status(500).send({ status: 'error', message: err.message });
+    }
+});
 
 router.get('/:cid', async (req, res) => {
 

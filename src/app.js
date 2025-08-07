@@ -11,7 +11,9 @@ import passport from 'passport';
 import initializePassport from './config/passport.config.js';
 import __dirname from './utils/constantsUtil.js';
 import websocket from './websocket.js';
+import dotenv from 'dotenv';
 
+dotenv.config();
 const app = express();
 
 // Conexión a MongoDB
