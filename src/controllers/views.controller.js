@@ -1,7 +1,8 @@
-// src/controllers/views.controller.js
 import { productDBManager } from '../dao/productDBManager.js';
 import { cartDBManager } from '../dao/cartDBManager.js';
+import { ticketDBManager } from '../dao/ticketDBManager.js';
 
+const TicketService = new ticketDBManager();
 const ProductService = new productDBManager();
 const CartService = new cartDBManager(ProductService);
 
@@ -55,4 +56,15 @@ export const renderResetPasswordView = (req, res) => {
     if (!token) return res.status(400).send('Token no proporcionado');
 
     res.render('resetPassword', { token });
+};
+export const renderTicketView = async (req, res) => {
+    try {
+        const ticket = await TicketService.getTicketById(req.params.tid);
+        res.render('ticket', {
+            title: 'Compra realizada con éxito',
+            ticket
+        });
+    } catch (error) {
+        res.status(404).send('Ticket no encontrado');
+    }
 };
